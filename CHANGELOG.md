@@ -1,3 +1,185 @@
+<a name="5.0.0-rc.10"></a>
+# [5.0.0-rc.10](https://github.com/angular/angularfire2/compare/5.0.0-rc.9...5.0.0-rc.10) (2018-05-22)
+
+### Bug Fixes
+
+* **firestore:** the type passed to `AngularFirestoreCollection` from a document's sub-collection will now default to `DocumentData`, rather than `any`, if no type is specified ([#1662](https://github.com/angular/angularfire2/issues/1662)) ([2c2fe02](https://github.com/angular/angularfire2/commit/97c8656))
+
+### Breaking change
+
+* **core:** AngularFire now depends only on the `firebase` NPM library, rather than `@firebase/*` and `@firebase/*-types`; this should simplify issues around keeping types in-sync and conflicts between package versions ([#1677](https://github.com/angular/angularfire2/issues/1677)) ([2c2fe02](https://github.com/angular/angularfire2/commit/53ad0d8))
+
+
+<a name="5.0.0-rc.9"></a>
+# [5.0.0-rc.9](https://github.com/angular/angularfire2/compare/5.0.0-rc.8...5.0.0-rc.9) (2018-05-16)
+
+
+### Bug Fixes
+
+* **core:** allow initializeApp to be used with AOT ([#1654](https://github.com/angular/angularfire2/issues/1654)) ([513565a](https://github.com/angular/angularfire2/commit/513565a))
+* **core:** Allow name + config deps to be optional ([#1641](https://github.com/angular/angularfire2/issues/1641)) ([a6af604](https://github.com/angular/angularfire2/commit/a6af604))
+* **firestore:** Fixed a bug where Firestore sub-collections were inheriting the type of the doc by default ([#1644](https://github.com/angular/angularfire2/issues/1644)) ([dff8ddf](https://github.com/angular/angularfire2/commit/dff8ddf))
+
+
+### Features
+
+* **auth:** Adding user and idTokenResult Observables to AngularFireAuth ([#1642](https://github.com/angular/angularfire2/issues/1642)) ([31045a9](https://github.com/angular/angularfire2/commit/31045a9))
+* **functions:** Adding AngularFireFunctions with httpCallable ([#1532](https://github.com/angular/angularfire2/issues/1532)) ([26f3f5f](https://github.com/angular/angularfire2/commit/26f3f5f))
+* **firestore:** types for collection, audit trail, state, and snapshot changes ([#1644](https://github.com/angular/angularfire2/issues/1644)) ([dff8ddf](https://github.com/angular/angularfire2/commit/dff8ddf))
+* **rtdb:** types for collection, audit trail, snapshot, and state changes ([#1643](https://github.com/angular/angularfire2/issues/1643)) ([2c2fe02](https://github.com/angular/angularfire2/commit/2c2fe02))
+
+
+### Breaking change
+
+* To deal with the initializeApp not being able to be used in AOT ([#1635](https://github.com/angular/angularfire2/issues/1635)) we removed `FirebaseAppConfigToken` and `FirebaseAppNameToken` and replaced them with a new `FirebaseNameOrConfigToken` which accepts either an app name string or a `FirebaseAppConfig` object. ([#1654](https://github.com/angular/angularfire2/issues/1654)) ([513565a](https://github.com/angular/angularfire2/commit/513565a))
+* **firestore:** If you do not specify a type to Document or Collection the default is now `DocumentData` ([#1644](https://github.com/angular/angularfire2/issues/1644)) ([dff8ddf](https://github.com/angular/angularfire2/commit/dff8ddf))
+
+
+
+<a name="5.0.0-rc.8"></a>
+# [5.0.0-rc.8](https://github.com/angular/angularfire2/compare/5.0.0-rc.7...5.0.0-rc.8) (2018-05-12)
+
+### Bug Fixes
+
+* Zone was already loaded, type is implied ([#1631](https://github.com/angular/angularfire2/issues/1631)) ([7d2fd53](https://github.com/angular/angularfire2/commit/7d2fd53)), closes [#1599](https://github.com/angular/angularfire2/issues/1599)
+
+### Features
+
+* Supporting Angular and rxjs 6 ([dd4a36c](https://github.com/angular/angularfire2/commit/dd4a36c))
+* Support Firebase JS SDK 5.0 ([#1628](https://github.com/angular/angularfire2/issues/1628)) ([b99bfa3](https://github.com/angular/angularfire2/commit/b99bfa3))
+* Support FirebaseAppConfig, clean up injection tokens ([#1627](https://github.com/angular/angularfire2/issues/1627)) ([57906bd](https://github.com/angular/angularfire2/commit/57906bd))
+* **firestore:** Support Firestore Settings, timestampsInSnapshots default to true ([#1629](https://github.com/angular/angularfire2/issues/1629)) ([570c0a7](https://github.com/angular/angularfire2/commit/570c0a7))
+* **auth:** Update to rxjs pipeable operators ([#1621](https://github.com/angular/angularfire2/issues/1621)) ([0c3b215](https://github.com/angular/angularfire2/commit/0c3b215))
+* **core:** Update to rxjs pipeable operators ([#1620](https://github.com/angular/angularfire2/issues/1620)) ([3fbbb7d](https://github.com/angular/angularfire2/commit/3fbbb7d))
+* **database:** Update to rxjs pipeable operators ([#1622](https://github.com/angular/angularfire2/issues/1622)) ([5c3681d](https://github.com/angular/angularfire2/commit/5c3681d))
+* **firestore:** Update to rxjs pipeable operators ([#1623](https://github.com/angular/angularfire2/issues/1623)) ([97b26e3](https://github.com/angular/angularfire2/commit/97b26e3))
+* **storage:** Update to rxjs pipeable operators ([#1624](https://github.com/angular/angularfire2/issues/1624)) ([014be21](https://github.com/angular/angularfire2/commit/014be21))
+
+### Breaking changes
+
+* Due to the addition of a conflicting `FirebaseAppConfig` interface in Firebase 4.13 we've now changed our `FirebaseAppConfig` Injection Token to be `FirebaseOptionsToken`
+* For consistency the `FirebaseAppName` Injection Token is now `FirebaseAppNameToken`
+* rxjs 5 is no longer supported, upgrade to 6 ([see the rxjs migration guide for more information](https://github.com/ReactiveX/rxjs/blob/master/MIGRATION.md))
+* Firebase JS SDK 4.x is no longer supported, upgrade to 5 ([see the changelog for more information](https://firebase.google.com/support/release-notes/js#version_500_may_8_2018))
+* To mirror a change in Firebase 5.x, `downloadURL` was removed from `AngularFireUploadTask`
+
+### Known issues
+
+* Some users may experience failures compiling AOT while using `AngularFireModule.initializeApp(...)`, a work-around is available ([see #1635](https://github.com/angular/angularfire2/issues/1635))
+
+<a name="5.0.0-rc.7"></a>
+# [5.0.0-rc.7](https://github.com/angular/angularfire2/compare/5.0.0-rc.6...5.0.0-rc.7) (2018-05-04)
+
+### Bug Fixes
+
+* **afs:** workarounds for bugs in the Firebase JS SDK [#605](https://github.com/firebase/firebase-js-sdk/issues/605) and [#608](https://github.com/firebase/firebase-js-sdk/issues/608) ([#1540](https://github.com/angular/angularfire2/issues/1540)) ([14e78ec](https://github.com/angular/angularfire2/commit/14e78ec))
+* **app:** add automaticDataCollectionEnabled for compatability with Firebase JS SDK v4.13+ ([#1572](https://github.com/angular/angularfire2/issues/1572)) ([f2cf159](https://github.com/angular/angularfire2/commit/f2cf159))
+
+
+### Features
+
+* **firestore:** allow collection and doc from ref ([#1487](https://github.com/angular/angularfire2/issues/1487)) ([136f1e5](https://github.com/angular/angularfire2/commit/136f1e5)), closes [#1337](https://github.com/angular/angularfire2/issues/1337)
+* `runOutsideAngular` for Universal / service worker compatability and allow advanced configuration with DI ([#1454](https://github.com/angular/angularfire2/issues/1454)) ([e343f13](https://github.com/angular/angularfire2/commit/e343f13))
+
+
+<a name="5.0.0-rc.6"></a>
+# [5.0.0-rc.6](https://github.com/angular/angularfire2/compare/5.0.0-rc.4...v5.0.0-rc.6) (2018-01-26)
+
+
+### Bug Fixes
+
+* Migrate imports to new Typings from 4.8.1 to resolve [#1385](https://github.com/angular/angularfire2/issues/1385) ([7ec51b2](https://github.com/angular/angularfire2/commit/7ec51b2))
+* Removing errant old import. Updating build with latest namespace. Fixing import for main [@firebase](https://github.com/firebase)/app. This resolves failing tests. ([a13bf9b](https://github.com/angular/angularfire2/commit/a13bf9b))
+* **afs:** fix di warning ([#1401](https://github.com/angular/angularfire2/issues/1401)) ([23ab383](https://github.com/angular/angularfire2/commit/23ab383))
+* **afs/typings:** valueChanges should return Observable<T|null> ([#1321](https://github.com/angular/angularfire2/issues/1321)) ([aadc71a](https://github.com/angular/angularfire2/commit/aadc71a))
+
+
+### Features
+* **storage:** Add Cloud Storage support ([e2283b1](https://github.com/angular/angularfire2/commit/e2283b1))
+
+
+
+<a name="5.0.0-rc.4"></a>
+# [5.0.0-rc.4](https://github.com/angular/angularfire2/compare/5.0.0-rc.3...5.0.0-rc.4) (2017-11-17)
+
+
+### Bug Fixes
+
+* **afs:** added missing type to doc() ([#1286](https://github.com/angular/angularfire2/issues/1286)) ([3e00e16](https://github.com/angular/angularfire2/commit/3e00e16))
+* **afs:** allow document set options ([#1333](https://github.com/angular/angularfire2/issues/1333)) ([81018ed](https://github.com/angular/angularfire2/commit/81018ed)), closes [#1332](https://github.com/angular/angularfire2/issues/1332)
+* **afs:** catch error when enabling persistence ([#1300](https://github.com/angular/angularfire2/issues/1300)) ([61245a3](https://github.com/angular/angularfire2/commit/61245a3))
+* **afs:** export interfaces ([#1277](https://github.com/angular/angularfire2/issues/1277)) ([4a21857](https://github.com/angular/angularfire2/commit/4a21857))
+* **db:** inherit generics in valueChanges interface ([10afd64](https://github.com/angular/angularfire2/commit/10afd64)), closes [#1214](https://github.com/angular/angularfire2/issues/1214)
+* **db:** update should take a Partial<T> object ([#1330](https://github.com/angular/angularfire2/issues/1330)) ([20e66f5](https://github.com/angular/angularfire2/commit/20e66f5)), closes [#1329](https://github.com/angular/angularfire2/issues/1329)
+
+
+<a name="5.0.0-rc.3"></a>
+# [5.0.0-rc.3](https://github.com/angular/angularfire2/compare/5.0.0-rc.2...5.0.0-rc.3) (2017-10-14)
+
+
+### Bug Fixes
+
+* **afs:** change doc.update() parameter type to Partial<T> ([#1247](https://github.com/angular/angularfire2/issues/1247)) ([297cabb](https://github.com/angular/angularfire2/commit/297cabb)), closes [#1245](https://github.com/angular/angularfire2/issues/1245) [#1215](https://github.com/angular/angularfire2/issues/1215)
+* **rtdb:** Fixed null set handling, ordering, and cleaned up types ([#1264](https://github.com/angular/angularfire2/issues/1264)) ([eda1c41](https://github.com/angular/angularfire2/commit/eda1c41))
+
+
+<a name="5.0.0-rc.2"></a>
+# [5.0.0-rc.2](https://github.com/angular/angularfire2/compare/5.0.0-rc.0...5.0.0-rc.2) (2017-10-05)
+
+
+### Bug Fixes
+
+* **afs:** Allow multiple subscribers by using share, closes [#1191](https://github.com/angular/angularfire2/issues/1191) ([#1192](https://github.com/angular/angularfire2/issues/1192)) ([21522ab](https://github.com/angular/angularfire2/commit/21522ab))
+* **afs:** Don't filter empty changes (allow for null set) ([eb71edc](https://github.com/angular/angularfire2/commit/eb71edc))
+* **afs:** remove debugger statement from collection/changes.ts ([#1190](https://github.com/angular/angularfire2/issues/1190)) ([88a25e7](https://github.com/angular/angularfire2/commit/88a25e7))
+* **auth:** Clean up the authentication module ([8ab3803](https://github.com/angular/angularfire2/commit/8ab3803))
+
+
+
+<a name="5.0.0-rc.0"></a>
+# [5.0.0-rc.0](https://github.com/angular/angularfire2/compare/4.0.0-rc.2...v5.0.0-rc.0) (2017-10-03)
+
+### Features
+* **AngularFirestore:** Module for Cloud Firestore ([90c8ede](https://github.com/angular/angularfire2/commit/90c8ede))
+* **New AngularFireDatabase API:** New API for the database [#1158](https://github.com/angular/angularfire2/issues/1158)
+
+### Breaking changes
+
+AngularFire 5.0 brings a new API for the Realtime Database. [See the migration doc for converting to the new API](https://github.com/angular/angularfire2/blob/master/docs/version-5-upgrade.md). If you want to stay on the old database API you can use:
+
+```ts
+import { AngularFireModule } from 'angularfire2/database-deprecated';
+```
+
+<a name="4.0.0-rc.1"></a>
+# [4.0.0-rc.1](https://github.com/angular/angularfire2/compare/4.0.0-rc.0...v4.0.0-rc.1) (2017-06-02)
+
+### Breaking changes
+
+* **rc:** Update to Firebase JS SDK 4.0 ([9642f5](https://github.com/angular/angularfire2/commit/9642f589ba73add6d49a5818a1109028f8c7729b))
+
+In version 4.0 of the Firebase SDK `onAuthStateChanged` is only fired on sign-in and sign-out, [see the Firebase JS SDK changelog for more information](https://firebase.google.com/support/release-notes/js#4.0.0). The added `AngularFireAuth.idToken: Observable<firebase.User>` behaves as `authState` used to.
+
+<a name="4.0.0-rc0"></a>
+# [4.0.0-rc0](https://github.com/angular/angularfire2/compare/2.0.0-beta.8...v4.0.0-rc0) (2017-05-02)
+
+
+### Bug Fixes
+
+* **auth:** Use the injected app ([980c447](https://github.com/angular/angularfire2/commit/980c447))
+* **build:** Add package.json files for deep paths ([cd5f2d1](https://github.com/angular/angularfire2/commit/cd5f2d1)), closes [#880](https://github.com/angular/angularfire2/issues/880)
+* **database:** Fix test TypeScript errors ([750737c](https://github.com/angular/angularfire2/commit/750737c)), closes [#875](https://github.com/angular/angularfire2/issues/875)
+* **database:** use switchMap when a list's query changes ([#831](https://github.com/angular/angularfire2/issues/831)) ([b85147d](https://github.com/angular/angularfire2/commit/b85147d)), closes [#830](https://github.com/angular/angularfire2/issues/830)
+
+
+### Features
+
+* **auth:** New Auth API ([12aa422](https://github.com/angular/angularfire2/commit/12aa422))
+* **database:** Add AngularFireDatabaseModule ([b388627](https://github.com/angular/angularfire2/commit/b388627))
+* **database:** support optional endAt/equalTo key ([#838](https://github.com/angular/angularfire2/issues/838)) ([e146492](https://github.com/angular/angularfire2/commit/e146492)), closes [#837](https://github.com/angular/angularfire2/issues/837)
+* **rc:** Implement rc0 API ([398e4e2](https://github.com/angular/angularfire2/commit/398e4e2))
+
+
 <a name="2.0.0-beta.8"></a>
 # [2.0.0-beta.8](https://github.com/angular/angularfire2/compare/2.0.0-beta7...v2.0.0-beta.8) (2017-02-16)
 

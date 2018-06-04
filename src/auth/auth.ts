@@ -1,12 +1,11 @@
-import * as firebase from 'firebase/app';
-import * as utils from '../utils';
-import 'firebase/auth';
-import { Injectable, NgZone } from '@angular/core';
-import { Auth } from '../interfaces';
-import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
-import { observeOn } from 'rxjs/operator/observeOn';
-import { FirebaseApp } from '../app/index';
+import { Injectable, Inject, Optional, NgZone, PLATFORM_ID } from '@angular/core';
+import { Observable, of, from } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { FirebaseAppConfig, FirebaseOptions } from 'angularfire2';
+
+import { User, auth } from 'firebase/app';
+
+import { FirebaseAuth, FirebaseOptionsToken, FirebaseNameOrConfigToken, _firebaseAppFactory, FirebaseZoneScheduler } from 'angularfire2';
 
 @Injectable()
 export class AngularFireAuth {
@@ -14,32 +13,67 @@ export class AngularFireAuth {
   /**
    * Firebase Auth instance
    */
-  auth: firebase.auth.Auth;
+  public readonly auth: FirebaseAuth;
 
   /**
-   * Observable of authentication state
+   * Observable of authentication state; as of Firebase 4.0 this is only triggered via sign-in/out
    */
-  authState: Observable<firebase.User>;
+  public readonly authState: Observable<User|null>;
 
-  constructor(public app: FirebaseApp) {
-    this.authState = FirebaseAuthStateObservable(app);
-    this.auth = app.auth();
+  /**
+   * Observable of the currently signed-in user's JWT token used to identify the user to a Firebase service (or null).
+   */
+  public readonly idToken: Observable<string|null>;
+
+  /**
+   * Observable of the currently signed-in user (or null).
+   */
+  public readonly user: Observable<User|null>;
+
+  /**
+   * Observable of the currently signed-in user's IdTokenResult object which contains the ID token JWT string and other
+   * helper properties for getting different data associated with the token as well as all the decoded payload claims
+   * (or null).
+   */
+  public readonly idTokenResult: Observable<auth.IdTokenResult|null>;
+
+  constructor(
+    @Inject(FirebaseOptionsToken) options:FirebaseOptions,
+    @Optional() @Inject(FirebaseNameOrConfigToken) nameOrConfig:string|FirebaseAppConfig|undefined,
+    @Inject(PLATFORM_ID) platformId: Object,
+    private zone: NgZone
+  ) {
+    const scheduler = new FirebaseZoneScheduler(zone, platformId);
+    this.auth = zone.runOutsideAngular(() => {
+      const app = _firebaseAppFactory(options, nameOrConfig);
+      return app.auth();
+    });
+
+    this.authState = scheduler.keepUnstableUntilFirst(
+      scheduler.runOutsideAngular(
+        new Observable(subscriber => {
+          const unsubscribe = this.auth.onAuthStateChanged(subscriber);
+          return { unsubscribe };
+        })
+      )
+    );
+
+    this.user = scheduler.keepUnstableUntilFirst(
+      scheduler.runOutsideAngular(
+        new Observable(subscriber => {
+          const unsubscribe = this.auth.onIdTokenChanged(subscriber);
+          return { unsubscribe };
+        })
+      )
+    );
+
+    this.idToken = this.user.pipe(switchMap(user => {
+      return user ? from(user.getIdToken()) : of(null)
+    }));
+
+    this.idTokenResult = this.user.pipe(switchMap(user => {
+      return user ? from(user.getIdTokenResult()) : of(null)
+    }));
   }
 
-}
-
-/**
- * Create an Observable of Firebase authentication state. Each event is called
- * within the current zone.
- * @param app - Firebase App instance
- */
-export function FirebaseAuthStateObservable(app: FirebaseApp): Observable<firebase.User> {
-  const authState = Observable.create((observer: Observer<firebase.User>) => {
-    app.auth().onAuthStateChanged(
-      (user?: firebase.User) => observer.next(user),
-      (error: firebase.auth.Error) => observer.error(error),
-      () => observer.complete()
-    );
-  });
-  return observeOn.call(authState, new utils.ZoneScheduler(Zone.current));
 }
