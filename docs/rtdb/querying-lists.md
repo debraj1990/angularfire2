@@ -8,9 +8,9 @@ Queries are created by building on the [`firebase.database.Reference`](https://f
 db.list('/items', ref => ref.orderByChild('size').equalTo('large'))
 ```
 
-**Query Options:**
+### Query options
 
-| method   | purpose            |
+| Method   | Purpose            |
 | ---------|--------------------|
 | `orderByChild` | Specify a child to order by. |
 | `orderByKey` | Boolean to order by Firebase Database keys. |
@@ -79,7 +79,7 @@ size$.next('small');
 
 ```ts
 import { Component } from '@angular/core';
-import { AngularFireDatabase, AngularFireAction } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireAction } from '@angular/fire/database';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { switchMap } 'rxjs/operators';
 

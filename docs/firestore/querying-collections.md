@@ -5,13 +5,13 @@ If you know the [Firestore query API](https://firebase.google.com/docs/reference
 
 ## Creating a query with primitive/scalar values
 
-Queries are created by building on the [`firebase.firestore.Reference`](https://firebase.google.com/docs/reference/js/firebase.firestore.Reference).
+Queries are created by building on the [`firebase.firestore.CollectionReference`](https://firebase.google.com/docs/reference/js/firebase.firestore.CollectionReference).
 
 ```ts
 afs.collection('items', ref => ref.where('size', '==', 'large'))
 ```
 
-**Query Options:**
+### Query options
 
 | method   | purpose            |
 | ---------|--------------------|
@@ -77,13 +77,13 @@ size$.next('large');
 size$.next('small');
 ```
 
-**Example app:**
+### Example app
  
 [See this example in action on StackBlitz](https://stackblitz.com/edit/angularfire-db-api-fbad9p).
 
 ```ts
 import { Component } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -156,9 +156,9 @@ export class AppComponent {
 }
 ```
 
-**To run the above example as is, you need to have sample data in you firebase database with the following structure:**
- 
- ```json
+**To run the above example as is, you need to have sample data in your Firebase database with the following structure:**
+
+```json
 {
   "items": {
     "a" : {
@@ -178,6 +178,6 @@ export class AppComponent {
     }
   }
 }
- ```
+```
 
 ### [Next Step: Getting started with Firebase Authentication](../auth/getting-started.md)
